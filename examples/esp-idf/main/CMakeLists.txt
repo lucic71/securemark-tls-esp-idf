@@ -27,6 +27,7 @@ if (SELFHOSTED)
             ../../../profile/ee_profile.c
             ../../../profile/ee_sha.c
             ../../../monitor/th_api/th_libc.c
+            ../../../monitor/th_api/th_lib.c
             profile/mbedtls_th_api/th_aes.c
             profile/mbedtls_th_api/th_util.c
             profile/mbedtls_th_api/th_ecdh.c

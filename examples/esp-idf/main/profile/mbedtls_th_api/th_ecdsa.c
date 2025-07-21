@@ -10,8 +10,11 @@
  * effective EEMBC Benchmark License Agreement, you must discontinue use.
  */
 
+#include <esp_random.h>
+
 //#include "mbedtls/config.h"
 #include "mbedtls/ecdsa.h"
+#include "mbedtls/ctr_drbg.h"
 
 #include "ee_ecdh.h"
 #include "ee_ecdsa.h"
@@ -78,6 +81,11 @@ th_ecdsa_init(void          *p_context, // input: portable context
     return load_private_key(p_context, p_private, plen);
 }
 
+static int rng(void *rng_state, unsigned char *output, size_t len) {
+  esp_fill_random(output, len);
+  return 0;
+}
+
 /**
  * Create a signature using the specified hash.
  *
@@ -101,7 +109,7 @@ th_ecdsa_sign(void          *p_context, // input: portable context
     slent = *p_slen;
 
     ret = mbedtls_ecdsa_write_signature(
-        p_ecdsa, MBEDTLS_MD_SHA256, p_hash, hlen, p_sig, slent, &slent, NULL, NULL);
+        p_ecdsa, MBEDTLS_MD_SHA256, p_hash, hlen, p_sig, slent, &slent, rng, NULL);
 
     if (ret != 0)
     {
